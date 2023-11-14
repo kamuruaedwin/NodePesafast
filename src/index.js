@@ -31,7 +31,7 @@ app.post("/signup", async (req, res) => {
   if (!req.body.username || !req.body.password) {
     return res.status(400).send('Username and password are required');
   }
-
+ 
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
   const data = {
@@ -39,14 +39,35 @@ app.post("/signup", async (req, res) => {
     password: hashedPassword,
   };
 
-  try {
+  const existinguser = await collection.findOne({ name: data.name });
+  if (existinguser) {
+    res.send("User already exists, choose a different username.");
+  } else {
     const userdata = await collection.insertMany(data);
-   // const userdata = await collection.create(data, { wtimeout: 3000});
     console.log(userdata);
-    res.status(201).send('User registered successfully');
+  }
+});
+
+
+//Login logic
+
+app.post("/login", async (req, res) => {
+  try {
+    const check = await collection.findOne({ name: req.body.username });
+    if (!check) {
+      res.send("Username not found");
+    } else {
+      // Comparing hashed password
+      const isPasswordMatch = await bcrypt.compare(req.body.password, check.password);
+      if (isPasswordMatch) {
+        res.render("home");
+      } else {
+        res.send("Wrong password");
+      }
+    }
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal Server Error:');
+    res.send("Error in login process");
   }
 });
 
