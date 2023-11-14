@@ -1,0 +1,18 @@
+-- users table
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  balance REAL DEFAULT 0
+);
+
+-- bets table
+CREATE TABLE IF NOT EXISTS bets (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER,
+  burst_value REAL,
+  predicted_value REAL,
+  stake_amount REAL,
+  result REAL,
+  FOREIGN KEY(user_id) REFERENCES users(id)
+);
