@@ -1,8 +1,8 @@
-// public/client.js
+// client.js
 const canvas = document.getElementById('chart-container');
 const context = canvas.getContext('2d');
 
-const socket = new WebSocket('ws://localhost:3000'); // Adjust the WebSocket URL based on your server setup
+const socket = new WebSocket('ws://localhost:3000'); // Connect to your server
 
 socket.addEventListener('message', (event) => {
   const data = JSON.parse(event.data);
